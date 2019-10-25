@@ -31,7 +31,7 @@ describe('Functors', () => {
   })
 
   // Exercise 4
-  test('Use Maybe to rewrite ex4 without an if statement.', () => {
+  test('Use Maybe instead of if statement. ', () => {
     const safeNum = function(n) {
       if (n) {
         return parseInt(n)
@@ -40,24 +40,12 @@ describe('Functors', () => {
 
     // safeNum :: Number -> Maybe(Number)
     // TODO: const safeNum = identity
+    // const safeNum = identity
+
     expect(safeNum('4').equals(Maybe(4))).toBeTruthy()
   })
 
   // Exercise 5
-  test("Write a function that will getPost then toUpperCase the post's title.", () => {
-    // getPost :: Int -> Future({id: Int, title: String})
-    const getPost = id =>
-      Async((_, res) => setTimeout(() => res({ id, title: 'Love them futures' }), 300))
-    const _upperTitle = compose(
-      toUpper,
-      prop('title')
-    )
-    // TODO: getPostThenUpper :: Int -> String
-    const getPostThenUpper = identity
-    getPostThenUpper(1).fork(console.log, title => expect(title).toBe('LOVE THEM FUTURES'))
-  })
-
-  // Exercise 6
   test('Write a function that uses checkActive() and showWelcome() to grant access or return the error.', () => {
     const showWelcome = compose(
       concat('Welcome '),
@@ -74,30 +62,14 @@ describe('Functors', () => {
     ).toBeTruthy()
   })
 
-  // Exercise 7
+  // Exercise 6
   test('Write a validation function that checks for a length > 3.', () => {
     //  It should return Right(x) if it is greater than 3 and Left("You need > 3") otherwise.
     // TODO: validateName :: User -> Either String ()
+    const errorMessage = 'You need > 3'
     const validateName = identity
+
     expect(validateName('hello').equals(Right('hello'))).toBeTruthy()
-    expect(validateName('fla').equals(Left('You need > 3'))).toBeTruthy()
-  })
-
-  // Exercise 8
-  test('Use ex7 above and Either as a functor to save the user if they are valid or return the error message string.', () => {
-    // save :: User -> IO User
-    const save = user => IO.of(() => ({ ...user, saved: true }))
-
-    // TODO: validateName :: User -> Either String ()
-    const validateName = identity
-
-    // TODO: register :: User -> IO String
-    // HINT: either :: Either c a ~> ((c -> b), (a -> b)) -> b
-    const register = compose(
-      identity, // <- hint: modify this line!
-      validateName
-    )
-    register('flavio').run(res => expect(res).toBe('flavio-saved'))
-    register('fla').run(error => expect(error).toBe('You need > 3!!!'))
+    expect(validateName('fla').equals(Left(errorMessage))).toBeTruthy()
   })
 })
