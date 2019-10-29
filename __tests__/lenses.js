@@ -3,10 +3,13 @@ import { compose, lensPath, over, inc, dec, not } from 'ramda'
 const LIKED = 'LIKED'
 const DISLIKED = 'DISLIKED'
 const initialState = [
-  { postId: 1, likes: { count: 10 }, user_has_liked: false },
-  { postId: 2, likes: { count: 42 }, user_has_liked: false },
-  { postId: 3, likes: { count: 5 }, user_has_liked: true },
+  { likes: { count: 10 }, isLiked: false, postId: 1 },
+  { likes: { count: 42 }, isLiked: false, postId: 2 },
+  { likes: { count: 5 }, isLiked: true, postId: 3 },
 ]
+
+//TODO: create lenses fo likes count and for isLiked
+//TIP: it should have dynamic arg index
 
 const reducer = (state = initialState, { type, index }) => {
   switch (type) {
@@ -17,7 +20,7 @@ const reducer = (state = initialState, { type, index }) => {
         {
           ...state[index],
           likes: { count: state[index].likes.count + 1 },
-          user_has_liked: true,
+          isLiked: true,
         },
         ...state.slice(index + 1),
       ]
@@ -28,7 +31,7 @@ const reducer = (state = initialState, { type, index }) => {
         {
           ...state[index],
           likes: { count: state[index].likes.count - 1 },
-          user_has_liked: false,
+          isLiked: false,
         },
         ...state.slice(index + 1),
       ]
@@ -37,22 +40,40 @@ const reducer = (state = initialState, { type, index }) => {
   }
 }
 
-describe('Lenses', () => {
-  it('Reducer -> LIKE feature should work', () => {
-    const index = 1
-    expect(initialState[index].likes.count).toBe(42)
-    expect(initialState[index].user_has_liked).toBe(false)
-    const newState = reducer(initialState, { type: LIKED, index })
-    expect(newState[index].likes.count).toBe(43)
-    expect(newState[index].user_has_liked).toBe(true)
+describe('Lenses in selectors', () => {
+  it('should get like count from state', () => {
+    //TODO: use likesCount lens here
+    const index = 0
+    expect(initialState[index].likes.count).toBe(10)
   })
 
-  it('Reducer -> DISLIKE feature should work', () => {
+  it('should get user has liked from state', () => {
+    //TODO: use isLiked lens here
+    const index = 0
+    expect(initialState[index].isLiked).toBe(false)
+  })
+})
+
+describe('Lenses in reducers', () => {
+  it('should increment like count and set hasLiked to true on LIKED action', () => {
+    const index = 1
+    expect(initialState[index].likes.count).toBe(42)
+    expect(initialState[index].isLiked).toBe(false)
+
+    const newState = reducer(initialState, { type: LIKED, index })
+
+    expect(newState[index].likes.count).toBe(43)
+    expect(newState[index].isLiked).toBe(true)
+  })
+
+  it('should decrement like count and set hasLiked to false on DISLIKED action', () => {
     const index = 2
     expect(initialState[index].likes.count).toBe(5)
-    expect(initialState[index].user_has_liked).toBe(true)
+    expect(initialState[index].isLiked).toBe(true)
+
     const newState = reducer(initialState, { type: DISLIKED, index })
+
     expect(newState[index].likes.count).toBe(4)
-    expect(newState[index].user_has_liked).toBe(false)
+    expect(newState[index].isLiked).toBe(false)
   })
 })
