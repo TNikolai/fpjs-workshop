@@ -8,7 +8,7 @@ const initialState = [
   { likes: { count: 5 }, isLiked: true, postId: 3 },
 ]
 
-//TODO: create lenses fo likes count and for isLiked
+//TODO: create lenses for likes count and for isLiked
 //TIP: it should have dynamic arg index
 
 const reducer = (state = initialState, { type, index }) => {
