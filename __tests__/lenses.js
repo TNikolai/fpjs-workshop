@@ -1,4 +1,4 @@
-import { compose, lensPath, over, inc, dec, not } from 'ramda'
+import { compose, lensPath, over, view, set, inc, dec, not } from 'ramda'
 
 const LIKED = 'LIKED'
 const DISLIKED = 'DISLIKED'
